@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<CategoryEntity, Long> {
 
-    @EntityGraph(attributePaths = "productEntities")
+    @EntityGraph(attributePaths = "product")
     List<CategoryEntity> findAll();
 
     Optional<CategoryEntity> findByName(String name);

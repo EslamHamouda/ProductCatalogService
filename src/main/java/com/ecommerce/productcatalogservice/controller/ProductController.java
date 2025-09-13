@@ -20,12 +20,10 @@ import static org.springframework.http.HttpStatus.OK;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductMapper productMapper;
 
     @Autowired
-    public ProductController(ProductService productService, ProductMapper productMapper) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.productMapper = productMapper;
     }
 
     @GetMapping
