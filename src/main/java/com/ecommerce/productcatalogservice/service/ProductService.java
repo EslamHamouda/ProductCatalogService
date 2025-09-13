@@ -8,14 +8,12 @@ import com.ecommerce.productcatalogservice.exception.ResourceNotFoundException;
 import com.ecommerce.productcatalogservice.mapper.ProductMapper;
 import com.ecommerce.productcatalogservice.repository.CategoryRepository;
 import com.ecommerce.productcatalogservice.repository.ProductRepository;
-import com.ecommerce.productcatalogservice.utils.MessageConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,25 +53,8 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProductDtoResponse> searchProductsByTitle(String title) {
-        List<ProductEntity> productEntities = productRepository.findByTitleContainingIgnoreCase(title);
-        return productEntities.stream()
-                .map(productMapper::toProductResponse)
-                .collect(Collectors.toList());
-    }
-
     public List<ProductDtoResponse> getProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
         List<ProductEntity> productEntities = productRepository.findByPriceBetween(minPrice, maxPrice);
-        return productEntities.stream()
-                .map(productMapper::toProductResponse)
-                .collect(Collectors.toList());
-    }
-
-    public List<ProductDtoResponse> getProductsByCategoryAndPriceRange(Long categoryId, BigDecimal minPrice, BigDecimal maxPrice) {
-        CategoryEntity categoryEntity = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-
-        List<ProductEntity> productEntities = productRepository.findByCategoryAndPriceBetween(categoryEntity, minPrice, maxPrice);
         return productEntities.stream()
                 .map(productMapper::toProductResponse)
                 .collect(Collectors.toList());
@@ -82,10 +63,9 @@ public class ProductService {
     @Transactional
     public ProductDtoResponse saveProduct(ProductDtoRequest productDtoRequest) {
         ProductEntity productEntity = new ProductEntity();
-        productEntity.setTitle(productDtoRequest.getTitle());
+        productEntity.setName(productDtoRequest.getName());
         productEntity.setDescription(productDtoRequest.getDescription());
         productEntity.setPrice(productDtoRequest.getPrice());
-        productEntity.setImageUrl(productDtoRequest.getImageUrl());
 
         if (productDtoRequest.getCategoryId() != null) {
             CategoryEntity categoryEntity = categoryRepository.findById(productDtoRequest.getCategoryId())
@@ -101,10 +81,9 @@ public class ProductService {
         ProductEntity existingProduct = productRepository.findById(productDtoRequest.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + productDtoRequest.getId()));
 
-        existingProduct.setTitle(productDtoRequest.getTitle());
+        existingProduct.setName(productDtoRequest.getName());
         existingProduct.setDescription(productDtoRequest.getDescription());
         existingProduct.setPrice(productDtoRequest.getPrice());
-        existingProduct.setImageUrl(productDtoRequest.getImageUrl());
 
         if (productDtoRequest.getCategoryId() != null) {
             CategoryEntity categoryEntity = categoryRepository.findById(productDtoRequest.getCategoryId())

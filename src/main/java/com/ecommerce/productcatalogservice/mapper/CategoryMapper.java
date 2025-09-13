@@ -9,7 +9,14 @@ import org.mapstruct.MappingConstants;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface CategoryMapper {
+    @Mapping(target = "productIds", source = "product")
     CategoryDtoResponse toCategoryResponse(CategoryEntity entity);
+
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "product", ignore = true)
     CategoryEntity toCategoryEntity(CategoryDtoRequest categoryDtoRequest);
+
+    default Long mapProductToId(com.ecommerce.productcatalogservice.entity.ProductEntity productEntity) {
+        return productEntity.getId();
+    }
 }

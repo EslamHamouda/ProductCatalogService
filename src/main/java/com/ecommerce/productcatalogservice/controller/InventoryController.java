@@ -20,14 +20,10 @@ import static org.springframework.http.HttpStatus.OK;
 public class InventoryController {
 
     private final InventoryService inventoryService;
-    private final ProductService productService;
-    private final InventoryMapper inventoryMapper;
 
     @Autowired
-    public InventoryController(InventoryService inventoryService, ProductService productService, InventoryMapper inventoryMapper) {
+    public InventoryController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
-        this.productService = productService;
-        this.inventoryMapper = inventoryMapper;
     }
 
     @GetMapping

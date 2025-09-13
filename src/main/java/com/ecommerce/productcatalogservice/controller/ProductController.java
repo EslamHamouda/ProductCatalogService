@@ -43,11 +43,6 @@ public class ProductController {
         return ResponseEntity.ok(new GenericResponse<>(OK.value(), MessageConstants.PRODUCTS_BY_CATEGORY_RETRIEVED_SUCCESSFULLY, productService.getProductsByCategory(categoryId)));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<GenericResponse<List<ProductDtoResponse>>> searchProducts(@RequestParam String title) {
-        return ResponseEntity.ok(new GenericResponse<>(OK.value(), MessageConstants.PRODUCTS_BY_SEARCH_RETRIEVED_SUCCESSFULLY, productService.searchProductsByTitle(title)));
-    }
-
     @GetMapping("/price-range")
     public ResponseEntity<GenericResponse<List<ProductDtoResponse>>> getProductsByPriceRange(
             @RequestParam BigDecimal minPrice,
@@ -62,7 +57,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericResponse<ProductDtoResponse>> updateProduct(@RequestBody ProductDtoRequest productDtoRequest) {
-        return ResponseEntity.ok(new GenericResponse<>(OK.value(), MessageConstants.PRODUCT_UPDATED_SUCCESSFULLY, productService.saveProduct(productDtoRequest)));
+        return ResponseEntity.ok(new GenericResponse<>(OK.value(), MessageConstants.PRODUCT_UPDATED_SUCCESSFULLY, productService.updateProduct(productDtoRequest)));
     }
 
     @DeleteMapping("/{id}")

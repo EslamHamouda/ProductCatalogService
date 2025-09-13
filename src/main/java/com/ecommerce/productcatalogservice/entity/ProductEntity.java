@@ -20,7 +20,7 @@ public class ProductEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String name;
 
     @Column(length = 1000)
     private String description;
@@ -28,14 +28,12 @@ public class ProductEntity {
     @Column(nullable = false)
     private BigDecimal price;
 
-    private String imageUrl;
-
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    private InventoryEntity inventoryEntity;
+    private InventoryEntity inventory;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

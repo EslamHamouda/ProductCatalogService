@@ -26,7 +26,7 @@ public class CategoryEntity {
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE})
-    private List<ProductEntity> productEntities = new ArrayList<>();
+    private List<ProductEntity> product = new ArrayList<>();
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

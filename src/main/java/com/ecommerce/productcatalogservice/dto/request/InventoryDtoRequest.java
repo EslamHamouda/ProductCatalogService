@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class InventoryDtoRequest {
     private Long id;
     private Long productId;
-    private String productTitle;
     private Integer quantity;
     private Integer lowStockThreshold;
 }

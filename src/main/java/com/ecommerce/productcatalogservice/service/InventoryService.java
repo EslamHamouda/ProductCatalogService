@@ -67,9 +67,10 @@ public class InventoryService {
         if (inventoryRepository.findByProduct_Id(inventoryDtoRequest.getProductId()).isPresent()) {
             throw new DuplicateResourceException("Inventory already exists for product id: " + inventoryDtoRequest.getProductId());
         }
-        // Create new inventory entity
-        InventoryEntity inventoryEntity;
-        inventoryEntity = inventoryMapper.toInventoryEntity(inventoryDtoRequest);
+
+        // Create new inventory entity - the mapper will handle setting the product
+        InventoryEntity inventoryEntity = inventoryMapper.toInventoryEntity(inventoryDtoRequest);
+        inventoryEntity.setProduct(productEntity);
         return inventoryMapper.toInventoryResponse(inventoryRepository.save(inventoryEntity));
     }
 
@@ -79,15 +80,20 @@ public class InventoryService {
         InventoryEntity existingInventory = inventoryRepository.findById(inventoryDtoRequest.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Inventory not found with id: " + inventoryDtoRequest.getId()));
 
-        // Check if product exists if product is being changed
+        // Update the inventory entity - only update fields that are provided
+        if(inventoryDtoRequest.getQuantity() != null){
+            existingInventory.setQuantity(inventoryDtoRequest.getQuantity());
+        }
+        if(inventoryDtoRequest.getLowStockThreshold() != null){
+            existingInventory.setLowStockThreshold(inventoryDtoRequest.getLowStockThreshold());
+        }
+
+        // Update product if it's being changed
         if (!existingInventory.getProduct().getId().equals(inventoryDtoRequest.getProductId())) {
             ProductEntity productEntity = productRepository.findById(inventoryDtoRequest.getProductId())
                     .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + inventoryDtoRequest.getProductId()));
             existingInventory.setProduct(productEntity);
         }
-
-        existingInventory.setQuantity(inventoryDtoRequest.getQuantity());
-        existingInventory.setLowStockThreshold(inventoryDtoRequest.getLowStockThreshold());
         return inventoryMapper.toInventoryResponse(inventoryRepository.save(existingInventory));
     }
 
